@@ -28,6 +28,9 @@
             android:name=".presentation.laf.LafManageActivity"
             android:exported="false" />
         <activity
+            android:name=".presentation.laf.LafFavoriteActivity"
+            android:exported="false"/>
+        <activity
             android:name=".presentation.main.MainActivity"
             android:exported="true">
             <intent-filter>

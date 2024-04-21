@@ -1,18 +1,5 @@
 package com.ifs21028.lostandfound.presentation.main
 
-import android.content.Intent
-import android.os.Bundle
-import android.view.View
-import android.widget.Button
-import android.widget.SearchView
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.ifs21028.lostandfound.R
 import com.ifs21028.lostandfound.adapter.LafAdapter
 import com.ifs21028.lostandfound.data.remote.MyResult
@@ -25,6 +12,18 @@ import com.ifs21028.lostandfound.presentation.laf.LafDetailActivity
 import com.ifs21028.lostandfound.presentation.laf.LafManageActivity
 import com.ifs21028.lostandfound.presentation.login.LoginActivity
 import com.ifs21028.lostandfound.presentation.profile.ProfileActivity
+import android.content.Intent
+import android.os.Bundle
+import android.view.View
+import android.widget.SearchView
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.ifs21028.lostandfound.presentation.laf.LafFavoriteActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -70,6 +69,10 @@ class MainActivity : AppCompatActivity() {
             when (menuItem.itemId) {
                 R.id.mainMenuProfile -> {
                     openProfileActivity()
+                    true
+                }
+                R.id.mainMenuFavoriteTodos -> {
+                    openFavoriteTodoActivity()
                     true
                 }
                 R.id.mainMenuLogout -> {
@@ -229,6 +232,13 @@ class MainActivity : AppCompatActivity() {
             LafManageActivity::class.java
         )
         intent.putExtra(LafManageActivity.KEY_IS_ADD, true)
+        launcher.launch(intent)
+    }
+    private fun openFavoriteTodoActivity() {
+        val intent = Intent(
+            this@MainActivity,
+            LafFavoriteActivity::class.java
+        )
         launcher.launch(intent)
     }
 }
