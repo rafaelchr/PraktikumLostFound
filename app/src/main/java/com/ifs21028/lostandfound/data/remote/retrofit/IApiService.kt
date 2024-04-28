@@ -8,12 +8,15 @@ import com.ifs21028.lostandfound.data.remote.response.LafGetMeResponse
 import com.ifs21028.lostandfound.data.remote.response.LafLoginResponse
 import com.ifs21028.lostandfound.data.remote.response.LafRegisterResponse
 import com.ifs21028.lostandfound.data.remote.response.LafUpdateLafResponse
+import okhttp3.MultipartBody
 import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -58,8 +61,8 @@ interface IApiService {
     @GET("lost-founds")
     suspend fun getAllLaf(
         @Query("is_completed") isCompleted: Int?,
-        @Query("is_me") isMe: Int,
-        @Query("status") status: String,
+        @Query("is_me") isMe: Int?,
+        @Query("status") status: String?,
     ): LafGetAllLafResponse
 
     @GET("lost-founds/{id}")
@@ -71,4 +74,11 @@ interface IApiService {
     suspend fun deleteLaf(
         @Path("id") lafId: Int,
     ): LafDeleteLafResponse
+
+    @Multipart
+    @POST("lost-founds/{id}/cover")
+    suspend fun addCoverLaf(
+        @Path("id") lafId: Int,
+        @Part cover: MultipartBody.Part,
+    ): LafRegisterResponse
 }

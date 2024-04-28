@@ -6,9 +6,11 @@ import com.ifs21028.lostandfound.data.remote.response.LafAddLafResponse
 import com.ifs21028.lostandfound.data.remote.response.LafDeleteLafResponse
 import com.ifs21028.lostandfound.data.remote.response.LafDetailLafResponse
 import com.ifs21028.lostandfound.data.remote.response.LafGetAllLafResponse
+import com.ifs21028.lostandfound.data.remote.response.LafRegisterResponse
 import com.ifs21028.lostandfound.data.remote.response.LafUpdateLafResponse
 import com.ifs21028.lostandfound.data.remote.retrofit.IApiService
 import kotlinx.coroutines.flow.flow
+import okhttp3.MultipartBody
 import retrofit2.HttpException
 
 class LafRepository private constructor(
@@ -39,6 +41,7 @@ class LafRepository private constructor(
             )
         }
     }
+
     fun putLaf(
         lafId: Int,
         title: String,
@@ -72,10 +75,11 @@ class LafRepository private constructor(
             )
         }
     }
+
     fun getAllLaf(
         isCompleted: Int?,
-        isMe: Int,
-        status: String,
+        isMe: Int?,
+        status: String?,
     ) = flow {
         emit(MyResult.Loading)
         try {
@@ -101,6 +105,7 @@ class LafRepository private constructor(
             )
         }
     }
+
     fun getDetailLaf(
         lafId: Int,
     ) = flow {
@@ -120,6 +125,7 @@ class LafRepository private constructor(
             )
         }
     }
+
     fun deleteLaf(
         lafId: Int,
     ) = flow {
@@ -139,6 +145,28 @@ class LafRepository private constructor(
             )
         }
     }
+
+    fun addCoverLaf(
+        todoId: Int,
+        cover: MultipartBody.Part,
+    ) = flow {
+        emit(MyResult.Loading)
+        try {
+            //get success message
+            emit(MyResult.Success(apiService.addCoverLaf(todoId, cover)))
+        } catch (e: HttpException) {
+            //get error message
+            val jsonInString = e.response()?.errorBody()?.string()
+            emit(
+                MyResult.Error(
+                    Gson()
+                        .fromJson(jsonInString, LafRegisterResponse::class.java)
+                        .message
+                )
+            )
+        }
+    }
+
     companion object {
         @Volatile
         private var INSTANCE: LafRepository? = null
@@ -154,3 +182,6 @@ class LafRepository private constructor(
         }
     }
 }
+
+
+

@@ -29,7 +29,7 @@ class MainViewModel(
         return lafRepository.getAllLaf(
             null,
             1,
-            "lost",
+            null,
         ).asLiveData()
     }
     fun putLaf(

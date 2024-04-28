@@ -8,6 +8,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.ifs21028.lostandfound.R
 import com.ifs21028.lostandfound.data.local.entity.LafEntity
 import com.ifs21028.lostandfound.data.model.LostFound
@@ -98,6 +99,18 @@ class LafDetailActivity : AppCompatActivity() {
             tvTodoDetailDesc.text = laf.description
             tvTodoDetailStat.text = "Status: ${laf.status}"
 
+            if(laf.cover != null){
+                ivTodoDetailCover.visibility = View.VISIBLE
+
+                Glide.with(this@LafDetailActivity)
+                    .load(laf.cover)
+                    .placeholder(R.drawable.ic_image_24)
+                    .into(ivTodoDetailCover)
+
+            }else{
+                ivTodoDetailCover.visibility = View.GONE
+            }
+
             viewModel.getLocalLaf(laf.id).observeOnce {
                 if(it != null){
                     lostFound = it
@@ -133,6 +146,7 @@ class LafDetailActivity : AppCompatActivity() {
                                 ).show()
                             }
                         }
+
                         is MyResult.Success -> {
                             if (isChecked) {
                                 Toast.makeText(
@@ -148,6 +162,7 @@ class LafDetailActivity : AppCompatActivity() {
                                 ).show()
                             }
                         }
+
                         else -> {}
                     }
                 }
@@ -159,6 +174,7 @@ class LafDetailActivity : AppCompatActivity() {
                     if(lostFound != null){
                         viewModel.deleteLocalLaf(lostFound!!)
                     }
+
                     Toast.makeText(
                         this@LafDetailActivity,
                         "Todo berhasil dihapus dari daftar favorite",
@@ -187,7 +203,6 @@ class LafDetailActivity : AppCompatActivity() {
                     ).show()
                 }
             }
-
 
             ivTodoDetailActionDelete.setOnClickListener {
                 val builder = AlertDialog.Builder(this@LafDetailActivity)
@@ -275,6 +290,7 @@ class LafDetailActivity : AppCompatActivity() {
                     setResult(RESULT_CODE, resultIntent)
                     finishAfterTransition()
                 }
+
                 else -> {}
             }
         }

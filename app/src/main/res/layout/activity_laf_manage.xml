@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".presentation.laf.LafManageActivity">
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbarLayoutLafManage"
         android:layout_width="match_parent"
@@ -22,16 +23,52 @@
             app:title="Tambah Lost and Found"
             app:titleTextColor="@color/white" />
     </com.google.android.material.appbar.AppBarLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:ignore="SpeakableTextPresentCheck">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="15dp"
             android:paddingEnd="15dp"
             android:paddingBottom="50dp">
+
+            <ImageView
+                android:id="@+id/ivTodoManageCover"
+                android:layout_width="0dp"
+                android:layout_height="160dp"
+                android:src="@drawable/ic_image_24"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/llTodoManageActionCover"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ivTodoManageCover">
+                <Button
+                    android:id="@+id/btnTodoManageCamera"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:text="Camera" />
+                <Button
+                    android:id="@+id/btnTodoManageGallery"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="Gallery" />
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/tvLafManageLabelTitle"
                 android:layout_width="wrap_content"
@@ -39,7 +76,8 @@
                 android:layout_marginTop="24dp"
                 android:text="Judul"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/llTodoManageActionCover" />
+
             <EditText
                 android:id="@+id/etLafManageTitle"
                 android:layout_width="0dp"

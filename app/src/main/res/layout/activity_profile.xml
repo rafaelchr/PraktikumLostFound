@@ -41,6 +41,15 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="alamat email" />
+
+        <Button
+            android:id="@+id/btnEditProfile"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="Edit Foto" />
+
     </LinearLayout>
     <ImageView
         android:id="@+id/ivProfileBack"

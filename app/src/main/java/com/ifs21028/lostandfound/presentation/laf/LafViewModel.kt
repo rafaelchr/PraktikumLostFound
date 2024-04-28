@@ -8,18 +8,22 @@ import com.ifs21028.lostandfound.data.remote.MyResult
 import com.ifs21028.lostandfound.data.remote.response.DataAddLafResponse
 import com.ifs21028.lostandfound.data.remote.response.LafDeleteLafResponse
 import com.ifs21028.lostandfound.data.remote.response.LafDetailLafResponse
+import com.ifs21028.lostandfound.data.remote.response.LafRegisterResponse
 import com.ifs21028.lostandfound.data.remote.response.LafUpdateLafResponse
 import com.ifs21028.lostandfound.data.repository.LafRepository
 import com.ifs21028.lostandfound.data.repository.LocalLafRepository
 import com.ifs21028.lostandfound.presentation.ViewModelFactory
+import okhttp3.MultipartBody
 
 class LafViewModel(
     private val lafRepository: LafRepository,
     private val localLafRepository: LocalLafRepository,
 ) : ViewModel() {
-    fun getDetailLaf(todoId: Int): LiveData<MyResult<LafDetailLafResponse>>{
-        return lafRepository.getDetailLaf(todoId).asLiveData()
+
+    fun getDetailLaf(lafId: Int): LiveData<MyResult<LafDetailLafResponse>>{
+        return lafRepository.getDetailLaf(lafId).asLiveData()
     }
+
     fun postLaf(
         title: String,
         description: String,
@@ -31,6 +35,7 @@ class LafViewModel(
             status
         ).asLiveData()
     }
+
     fun putLaf(
         lafId: Int,
         title: String,
@@ -46,6 +51,7 @@ class LafViewModel(
             isCompleted,
         ).asLiveData()
     }
+
     fun deleteLaf(lafId: Int): LiveData<MyResult<LafDeleteLafResponse>> {
         return lafRepository.deleteLaf(lafId).asLiveData()
     }
@@ -53,14 +59,24 @@ class LafViewModel(
     fun getLocalLaf(): LiveData<List<LafEntity>?> {
         return localLafRepository.getAllTodos()
     }
+
     fun getLocalLaf(todoId: Int): LiveData<LafEntity?> {
         return localLafRepository.get(todoId)
     }
+
     fun insertLocalLaf(todo: LafEntity) {
         localLafRepository.insert(todo)
     }
+
     fun deleteLocalLaf(todo: LafEntity) {
         localLafRepository.delete(todo)
+    }
+
+    fun addCoverLaf(
+        todoId: Int,
+        cover: MultipartBody.Part,
+    ): LiveData<MyResult<LafRegisterResponse>> {
+        return lafRepository.addCoverLaf(todoId, cover).asLiveData()
     }
 
     companion object {
@@ -79,5 +95,4 @@ class LafViewModel(
             return INSTANCE as LafViewModel
         }
     }
-
 }
