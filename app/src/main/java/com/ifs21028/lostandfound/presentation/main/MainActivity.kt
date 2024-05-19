@@ -14,11 +14,13 @@ import com.ifs21028.lostandfound.presentation.login.LoginActivity
 import com.ifs21028.lostandfound.presentation.profile.ProfileActivity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -36,17 +38,17 @@ class MainActivity : AppCompatActivity() {
         if (result.resultCode == LafManageActivity.RESULT_CODE) {
             recreate()
         }
-        if (result.resultCode == LafDetailActivity.RESULT_CODE) {
-            result.data?.let {
-                val isChanged = it.getBooleanExtra(
-                    LafDetailActivity.KEY_IS_CHANGED,
-                    false
-                )
-                if (isChanged) {
-                    recreate()
-                }
-            }
-        }
+//        if (result.resultCode == LafDetailActivity.RESULT_CODE) {
+//            result.data?.let {
+//                val isChanged = it.getBooleanExtra(
+//                    LafDetailActivity.KEY_IS_CHANGED,
+//                    false
+//                )
+//                if (isChanged) {
+//                    recreate()
+//                }
+//            }
+//        }
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         binding.appbarMain.overflowIcon =
             ContextCompat
                 .getDrawable(this, R.drawable.ic_more_vert_24)
-        observeGetAllLaf()
+        observeGetAllLaf(null, null, null)
     }
     private fun setupAction() {
         binding.appbarMain.setOnMenuItemClickListener { menuItem ->
@@ -80,6 +82,58 @@ class MainActivity : AppCompatActivity() {
                     openLoginActivity()
                     true
                 }
+                R.id.btnFilter -> {
+                    val checkedItems = booleanArrayOf(false, false, false, false, false)
+                    val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+                    builder
+                        .setTitle("Pilih yang ingin ditampilkan")
+                        .setPositiveButton("Pilih") { dialog, which ->
+                            val saya = if (checkedItems[0]) 1 else null
+
+                            val lostorfound: String? = if(checkedItems[1]) {
+                                if(checkedItems[2]) {
+                                    null
+                                } else {
+                                    "lost"
+                                }
+                            } else {
+                                if(checkedItems[2]) {
+                                    "found"
+                                } else {
+                                    null
+                                }
+                            }
+
+                            val status: Int? = if(checkedItems[3]) {
+                                if(checkedItems[4]) {
+                                    null
+                                } else {
+                                    1
+                                }
+                            } else {
+                                if(checkedItems[4]) {
+                                    0
+                                } else {
+                                    null
+                                }
+                            }
+
+                            observeGetAllLaf(status, saya, lostorfound)
+                        }
+                        .setNegativeButton("Batal") { dialog, which ->
+                            // Do something else.
+                        }
+                        .setMultiChoiceItems(
+                            arrayOf("Saya", "Lost", "Found", "Completed", "Incompleted"), checkedItems) { dialog, which, isChecked ->
+                            checkedItems[which] = isChecked
+                        }
+
+//                        Log.d("CheckedItemsDump", "Checked items: ${checkedItems.contentToString()}")
+
+                    val dialog: AlertDialog = builder.create()
+                    dialog.show()
+                    true
+                }
                 else -> false
             }
         }
@@ -90,12 +144,12 @@ class MainActivity : AppCompatActivity() {
             if (!user.isLogin) {
                 openLoginActivity()
             } else {
-                observeGetAllLaf()
+                observeGetAllLaf(null, null, null)
             }
         }
     }
-    private fun observeGetAllLaf() {
-        viewModel.getAllLaf().observe(this) { result ->
+    private fun observeGetAllLaf(isCompleted: Int?, isMe: Int?, status: String?) {
+        viewModel.getAllLaf(isCompleted, isMe, status).observe(this) { result ->
             if (result != null) {
                 when (result) {
                     is MyResult.Loading -> {
@@ -121,8 +175,9 @@ class MainActivity : AppCompatActivity() {
             this,
             layoutManager.orientation
         )
-        binding.rvMainTodos.addItemDecoration(itemDecoration)
+        binding.rvMainTodos.removeItemDecoration(itemDecoration)
         if (allLaf.isEmpty()) {
+            showComponentNotEmpty(false)
             showEmptyError(true)
             binding.rvMainTodos.adapter = null
         } else {

@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.ifs21028.lostandfound.R
@@ -16,9 +17,16 @@ import com.ifs21028.lostandfound.data.remote.MyResult
 import com.ifs21028.lostandfound.data.remote.response.DataGetMeResponse
 import com.ifs21028.lostandfound.databinding.ActivityProfileBinding
 import com.ifs21028.lostandfound.databinding.ActivityProfileEditBinding
+import com.ifs21028.lostandfound.helper.Utils.Companion.observeOnce
 import com.ifs21028.lostandfound.helper.getImageUri
+import com.ifs21028.lostandfound.helper.reduceFileImage
+import com.ifs21028.lostandfound.helper.uriToFile
 import com.ifs21028.lostandfound.presentation.ViewModelFactory
+import com.ifs21028.lostandfound.presentation.laf.LafManageActivity
 import com.ifs21028.lostandfound.presentation.login.LoginActivity
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 
 class ProfileEditActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProfileEditBinding
@@ -37,23 +45,71 @@ class ProfileEditActivity : AppCompatActivity() {
     }
 
     private fun setupView(){
-//        showLoading(true)
+        showLoading(true)
         observeGetMe()
     }
 
     private fun setupAction(){
         binding.apply {
             ivProfileBack.setOnClickListener {
+                startActivity(Intent(this@ProfileEditActivity, ProfileActivity::class.java))
                 finish()
             }
-        }
 
-        binding.btnTodoManageCamera.setOnClickListener {
-            startCamera()
-        }
+            btnTodoManageCamera.setOnClickListener {
+                startCamera()
+            }
 
-        binding.btnTodoManageGallery.setOnClickListener {
-            startGallery()
+            btnTodoManageGallery.setOnClickListener {
+                startGallery()
+            }
+
+            btnSave.setOnClickListener {
+                observeAddPhoto()
+            }
+        }
+    }
+
+    private fun observeAddPhoto() {
+        val imageFile =
+            uriToFile(currentImageUri!!, this).reduceFileImage()
+        val requestImageFile =
+            imageFile.asRequestBody("image/jpeg".toMediaType())
+        val reqPhoto =
+            MultipartBody.Part.createFormData(
+                "photo",
+                imageFile.name,
+                requestImageFile
+            )
+        viewModel.addPhoto(
+            reqPhoto
+        ).observeOnce { result ->
+            when (result) {
+                is MyResult.Loading -> {
+                    showLoading(true)
+                }
+                is MyResult.Success -> {
+                    showLoading(false)
+                    intent = Intent(this, ProfileActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+                is MyResult.Error -> {
+                    showLoading(false)
+                    AlertDialog.Builder(this@ProfileEditActivity).apply {
+                        setTitle("Oh No!")
+                        setMessage(result.error)
+                        setPositiveButton("Oke") { _, _ ->
+                            val resultIntent = Intent()
+                            setResult(LafManageActivity.RESULT_CODE, resultIntent)
+                            finishAfterTransition()
+                        }
+                        setCancelable(false)
+                        create()
+                        show()
+                    }
+                }
+            }
         }
     }
 
@@ -78,15 +134,18 @@ class ProfileEditActivity : AppCompatActivity() {
             ).show()
         }
     }
+
     private fun showImage() {
         currentImageUri?.let {
             binding.ivEditProfile.setImageURI(it)
         }
     }
+
     private fun startCamera() {
         currentImageUri = getImageUri(this)
         launcherIntentCamera.launch(currentImageUri)
     }
+
     private val launcherIntentCamera = registerForActivityResult(
         ActivityResultContracts.TakePicture()
     ) { isSuccess ->
@@ -96,8 +155,8 @@ class ProfileEditActivity : AppCompatActivity() {
     }
 
     private fun showLoading(isLoading: Boolean) {
-//        binding.pbProfile.visibility = if (isLoading) View.VISIBLE else View.GONE
-//        binding.llProfile.visibility = if (isLoading) View.GONE else View.VISIBLE
+        binding.pbProfile.visibility = if (isLoading) View.VISIBLE else View.GONE
+        binding.layoutEditProfile.visibility = if (isLoading) View.GONE else View.VISIBLE
     }
 
     private fun observeGetMe(){
@@ -105,14 +164,14 @@ class ProfileEditActivity : AppCompatActivity() {
             if (result != null) {
                 when (result) {
                     is MyResult.Loading -> {
-//                        showLoading(true)
+                        showLoading(true)
                     }
                     is MyResult.Success -> {
-//                        showLoading(false)
+                        showLoading(false)
                         loadProfileData(result.data)
                     }
                     is MyResult.Error -> {
-//                        showLoading(false)
+                        showLoading(false)
                         Toast.makeText(
                             applicationContext, result.error, Toast.LENGTH_LONG
                         ).show()
@@ -144,3 +203,4 @@ class ProfileEditActivity : AppCompatActivity() {
         finish()
     }
 }
+

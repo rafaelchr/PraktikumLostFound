@@ -15,4 +15,11 @@
             android:title="Logout"
             app:showAsAction="never" />
     </group>
+    <item
+        android:id="@+id/btnFilter"
+        android:title="Item"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/baseline_apps_24"
+        android:iconTint="@color/black"
+        />
 </menu>

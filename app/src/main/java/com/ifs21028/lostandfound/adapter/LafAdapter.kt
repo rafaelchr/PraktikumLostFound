@@ -1,10 +1,13 @@
 package com.ifs21028.lostandfound.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.ifs21028.lostandfound.R
 import com.ifs21028.lostandfound.data.remote.response.LostFoundsItemResponse
 import com.ifs21028.lostandfound.databinding.ItemRowLafBinding
 
@@ -36,7 +39,7 @@ class LafAdapter :
             holder.bind(data)
             onItemClickCallback.onCheckedChangeListener(data, isChecked)
         }
-        holder.binding.ivItemTodoDetail.setOnClickListener {
+        holder.binding.btnItemTodoDetail.setOnClickListener {
             onItemClickCallback.onClickDetailListener(data.id)
         }
     }
@@ -46,6 +49,18 @@ class LafAdapter :
             binding.apply {
                 tvItemTodoTitle.text = data.title
                 cbItemTodoIsFinished.isChecked = data.isCompleted == 1
+                tvItemLaf.text = data.status
+
+                if(data.cover != null) {
+                    ivLaf.visibility = View.VISIBLE
+
+                    Glide.with(itemView.context)
+                        .load(data.cover)
+                        .placeholder(R.drawable.ic_image_24)
+                        .into(ivLaf)
+                } else {
+                    ivLaf.visibility = View.GONE
+                }
             }
         }
     }

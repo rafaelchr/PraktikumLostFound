@@ -43,6 +43,7 @@ class ProfileActivity : AppCompatActivity() {
         binding.btnEditProfile.setOnClickListener {
             intent = Intent(this, ProfileEditActivity::class.java)
             startActivity(intent)
+            finishAfterTransition()
         }
     }
 

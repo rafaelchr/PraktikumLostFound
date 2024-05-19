@@ -40,6 +40,12 @@ interface IApiService {
     @GET("users/me")
     suspend fun getMe(): LafGetMeResponse
 
+    @Multipart
+    @POST("users/photo")
+    suspend fun addPhoto(
+        @Part photo: MultipartBody.Part,
+    ): LafRegisterResponse
+
     @FormUrlEncoded
     @POST("lost-founds")
     suspend fun postLaf(

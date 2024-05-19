@@ -31,7 +31,7 @@
         android:isScrollContainer="false"
         android:keepScreenOn="false"
         android:queryBackground="@null"
-        android:queryHint="Temukan todo..."
+        android:queryHint="Temukan barang..."
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appbarLayoutMain" >
@@ -72,7 +72,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Belum terdapat data todo!"
+        android:text="Belum terdapat data!"
         android:textColor="#E6180D"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"

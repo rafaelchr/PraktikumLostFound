@@ -17,5 +17,5 @@ data class LafAddLafResponse(
 data class DataAddLafResponse(
 
 	@field:SerializedName("lost_found_id")
-	val lostFoundId: Int
+	val  lostFoundId: Int
 )

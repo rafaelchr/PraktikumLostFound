@@ -25,11 +25,15 @@ class MainViewModel(
             authRepository.logout()
         }
     }
-    fun getAllLaf(): LiveData<MyResult<LafGetAllLafResponse>> {
+    fun getAllLaf(
+        isCompleted: Int?,
+        isMe: Int?,
+        status: String?,
+    ): LiveData<MyResult<LafGetAllLafResponse>> {
         return lafRepository.getAllLaf(
-            null,
-            1,
-            null,
+            isCompleted,
+            isMe,
+            status,
         ).asLiveData()
     }
     fun putLaf(

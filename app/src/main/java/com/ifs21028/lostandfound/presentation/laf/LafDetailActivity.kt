@@ -17,6 +17,7 @@ import com.ifs21028.lostandfound.data.remote.response.LostFoundDetailLafResponse
 import com.ifs21028.lostandfound.databinding.ActivityLafDetailBinding
 import com.ifs21028.lostandfound.helper.Utils.Companion.observeOnce
 import com.ifs21028.lostandfound.presentation.ViewModelFactory
+import com.ifs21028.lostandfound.presentation.main.MainActivity
 
 class LafDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLafDetailBinding
@@ -60,9 +61,9 @@ class LafDetailActivity : AppCompatActivity() {
         observeGetLaf(lafId)
 
         binding.appbarTodoDetail.setNavigationOnClickListener {
-            val resultIntent = Intent()
-            resultIntent.putExtra(KEY_IS_CHANGED, true)
-            setResult(RESULT_CODE, resultIntent)
+//            val resultIntent = Intent()
+//            resultIntent.putExtra(KEY_IS_CHANGED, true)
+//            setResult(RESULT_CODE, resultIntent)
             finishAfterTransition()
         }
     }
